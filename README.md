@@ -1,8 +1,18 @@
 # IoT-Based Smoke and LPG Detector
 
+## Quick Start
+
+Clone this repository and follow the **Configuration & Setup** section below to get started in minutes!
+
 ## Overview
 
-This is a real-time IoT-based Smoke and LPG gas detector system built with **ESP8266** microcontroller. The system detects gas leaks using an **MQ-2 gas sensor**, triggers a buzzer alarm when smoke/LPG is detected, and logs all data to **Firebase Realtime Database** for remote monitoring and real-time tracking.
+This is a complete **IoT Gas Detection System** with hardware and mobile app components:
+
+- **ESP8266 Firmware** (`main.cpp`) - Detects gas locally and reports to cloud
+- **Android App** (`android-app/`) - Real-time monitoring and alerts from anywhere
+- **Firebase Backend** - Secure cloud database for all data
+
+The system detects gas leaks using an **MQ-2 gas sensor**, triggers a buzzer alarm when smoke/LPG is detected, and logs all data to **Firebase Realtime Database** for remote monitoring via the companion Android app.
 
 The device uses **active LOW** detection logic, meaning the sensor outputs LOW (0) when smoke/fire is detected and HIGH (1) in clean air conditions.
 
@@ -16,6 +26,246 @@ The device uses **active LOW** detection logic, meaning the sensor outputs LOW (
 ✅ **Serial Debugging** - Real-time console output for troubleshooting  
 ✅ **Active LOW Detection** - Optimized logic for MQ-2 sensor response  
 ✅ **PUT Method Updates** - Uses Firebase PUT to overwrite latest value (no database bloat)
+
+## 📁 Project Structure
+
+```
+iot-based-smoke-and-lpg-detector/
+│
+├── main.cpp                  # Main firmware code (add your credentials here)
+├── main_template.cpp         # Template with placeholder credentials (safe to share)
+├── README.md                 # This file - full project documentation
+├── CREDENTIALS_SETUP.md      # Security guide and credential setup instructions
+├── .gitignore               # Git ignore rules (protects your credentials)
+│
+└── android-app/             # Optional Android companion app (separate project)
+    ├── app/
+    ├── gradle/
+    └── build.gradle.kts
+```
+
+**Key Files:**
+- 🔧 **main.cpp** - Fill in your WiFi & Firebase credentials here
+- 📋 **main_template.cpp** - Use this as reference for code structure
+- 🔐 **CREDENTIALS_SETUP.md** - Complete security best practices guide
+- 🛡️ **.gitignore** - Automatically protects sensitive files from git
+
+## 🏗️ System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     COMPLETE IoT SYSTEM                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌────────────────┐         ┌──────────────────────────┐    │
+│  │  MQ-2 Sensor   │         │   Firebase Realtime DB   │    │
+│  │  + Buzzer      │         │   (Cloud Backend)        │    │
+│  │                │         │                          │    │
+│  │  ┌─ LOW = Gas   │────────▶ mq2_readings            │    │
+│  │  │ HIGH = Clean │         {"gasDigital": 0/1}      │    │
+│  │  └──────────────┤         {"timestamp": xxxx}      │    │
+│  │                │         │                          │    │
+│  │  ESP8266       │         │  Rules: Public R/W       │    │
+│  │  NodeMCU       │         │                          │    │
+│  │                │         └────────────┬─────────────┘    │
+│  │  WiFi Connect  │                      │                  │
+│  │  PUT to DB     │                      │                  │
+│  │  Every 5 sec   │                      │                  │
+│  │                │                      │                  │
+│  └────────────────┘                      │                  │
+│        ▲                                  │                  │
+│        │                                  │                  │
+│        │ USB Programming                  │                  │
+│        │ (Arduino IDE)                    ▼                  │
+│        │                          ┌──────────────────────┐  │
+│  ┌─────┴──────────────────┐       │   Android App        │  │
+│  │  Computer              │       │   (Companion)        │  │
+│  │  - Arduino IDE         │       │                      │  │
+│  │  - Code Upload         │       │  - Real-time View    │  │
+│  │  - Serial Monitor      │       │  - Notifications     │  │
+│  │                        │       │  - History Tracking  │  │
+│  └────────────────────────┘       │  - Dark Mode         │  │
+│                                   │                      │  │
+│                                   └──────────────────────┘  │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### System Components:
+
+1. **Hardware (ESP8266 + Sensors)**
+   - Detects gas locally
+   - Sounds buzzer immediately
+   - Reports to Firebase every 5 seconds
+
+2. **Cloud Backend (Firebase)**
+   - Stores real-time sensor data
+   - Provides REST API
+   - Handles push notifications
+
+3. **Mobile App (Android)**
+   - Displays live status
+   - Receives instant notifications
+   - Views historical data
+   - Works remotely from anywhere
+
+## ⚙️ Complete System Setup Overview
+
+### You will need:
+
+1. **Hardware Setup** (~30 minutes)
+   - Assemble ESP8266 + MQ-2 sensor + buzzer
+   - Connect to WiFi
+   - Upload firmware from `main.cpp`
+
+2. **Firebase Setup** (~10 minutes)
+   - Create Firebase project
+   - Set up Realtime Database
+   - Get credentials for both ESP8266 and Android app
+
+3. **Android App Setup** (~10 minutes)
+   - Install Android Studio
+   - Open `android-app/` project folder
+   - Get `google-services.json` from Firebase
+   - Build and install on Android phone
+
+4. **Integration** (~5 minutes)
+   - Use same Firebase project for ESP8266 and Android app
+   - Android app automatically reads data that ESP8266 sends
+   - Done! Complete system is now live
+
+**Total Setup Time**: ~1 hour for complete working system
+
+## 📱 Android Companion App
+
+The `android-app/` folder contains a complete Android application that connects to the same Firebase database to display real-time sensor data and receive notifications.
+
+### Features
+
+- 📊 **Real-time Dashboard** - View live sensor readings from the Firebase database
+- 🔔 **Push Notifications** - Get alerts when gas is detected
+- 📈 **Historical Data** - View data trends and history
+- 🎨 **Modern UI** - Built with Jetpack Compose (Kotlin)
+- 🔐 **Secure Authentication** - Firebase authentication integration
+- 🌙 **Dark Mode Support** - Comfortable viewing in any lighting
+
+### Android App Structure
+
+```
+android-app/
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/kotlin/        # App source code
+│   │   │   ├── res/                # UI resources, layouts, strings
+│   │   │   ├── AndroidManifest.xml # App configuration
+│   │   │   └── google-services.json# Firebase config (in .gitignore)
+│   │   ├── test/                   # Unit tests
+│   │   └── androidTest/            # Instrumented tests
+│   ├── build.gradle.kts            # App dependencies
+│   └── proguard-rules.pro          # Code obfuscation rules
+├── build.gradle.kts                # Project-level build config
+├── settings.gradle.kts             # Project settings
+└── gradle/                         # Gradle wrapper
+```
+
+### Requirements
+
+- **Android Version**: 7.0 (API 24) or higher
+- **Java/Kotlin**: Kotlin with AndroidX
+- **Libraries Used**:
+  - Firebase Realtime Database SDK
+  - Firebase Authentication
+  - Firebase Cloud Messaging (FCM)
+  - Jetpack Compose UI Framework
+  - Material Design 3
+
+### Setup Instructions
+
+1. **Open in Android Studio**:
+   - Open Android Studio
+   - Click **File → Open**
+   - Navigate to `android-app/` folder
+   - Click **OK** to open the project
+
+2. **Configure Firebase**:
+   - Get `google-services.json` from your Firebase project
+   - Place it in `android-app/app/` folder
+   - The file is in `.gitignore` - never commit it!
+
+3. **Update Database URL**:
+   - Open `app/build.gradle.kts`
+   - Update Firebase project ID to match your project
+   - Sync Gradle files
+
+4. **Build and Run**:
+   - Connect Android device or use emulator
+   - Click **Run → Run 'app'**
+   - Grant permissions when prompted
+
+### Connecting to Your Device
+
+The Android app automatically reads from the same Firebase database that your ESP8266 writes to:
+
+1. Both use the same Firebase project
+2. The app displays the latest `mq2_readings` data
+3. Notifications trigger when `gasDigital` changes from 1 to 0
+
+### App Features in Detail
+
+#### Dashboard Tab
+- Real-time status: "Gas Detected" or "Clean Air"
+- Current reading timestamp
+- Last update time
+- Connection status
+
+#### Notifications
+- Receive alerts when smoke is detected
+- Customizable notification settings
+- Sound and vibration options
+
+#### Settings
+- Firebase project configuration
+- Notification preferences
+- Data refresh interval
+- Theme selection (Light/Dark mode)
+
+### Troubleshooting Android App
+
+| Issue | Solution |
+|-------|----------|
+| App won't build | Check SDK version matches requirements; Update Gradle; Sync project |
+| No Firebase data | Verify `google-services.json` is in correct location; Check Firebase rules allow read access |
+| Notifications not working | Enable Firebase Cloud Messaging (FCM); Check app permissions; Allow notifications in system settings |
+| App crashes on startup | Check Android version is 7.0+; Verify internet connection; Clear app cache |
+| Can't connect to Firebase | Check WiFi/internet; Verify project ID in code; Check Firebase console is accessible |
+
+### Development
+
+To modify the Android app:
+
+1. **MainActivity.kt** - Main activity and navigation
+2. **FirebaseManager.kt** - Firebase database operations
+3. **ui/** - Jetpack Compose screens
+4. **models/** - Data models for sensor readings
+5. **utils/** - Helper functions and utilities
+
+### Building Release APK
+
+```bash
+cd android-app
+./gradlew assembleRelease
+```
+
+APK will be generated at: `android-app/app/build/outputs/apk/release/`
+
+### Security Notes
+
+- Never commit `google-services.json` to the repository
+- `.gitignore` already protects this file
+- Store Firebase credentials securely
+- Use Firebase Authentication for production apps
+- Implement proper authorization rules in Firebase
 
 ## Hardware Components
 
@@ -88,6 +338,18 @@ The following libraries are used (all built-in to Arduino IDE):
 6. Set **Tools → Upload Speed** to **115200**
 
 ## Configuration & Setup
+
+### 📋 Important: Using the Template File
+
+This repository includes two versions of the code:
+
+- **`main_template.cpp`** - Template file with placeholder credentials (SAFE TO SHARE)
+- **`main.cpp`** - Your working file (ADD YOUR CREDENTIALS HERE, protected by .gitignore)
+
+**To get started:**
+1. Copy `main_template.cpp` to create your working version, or
+2. Fill in credentials directly in `main.cpp`
+3. The `.gitignore` file protects your credentials from being accidentally committed
 
 ### Step 1: Gather WiFi Credentials
 
@@ -328,28 +590,29 @@ Response payload:
 
 ⚠️ **CRITICAL**: Before sharing code or uploading to GitHub:
 
-1. **Remove all credentials**:
+1. **Remove all credentials** from `main.cpp`:
    ```cpp
    const char* WIFI_SSID     = "YOUR_WIFI_SSID_HERE";
    const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD_HERE";
    const char* FIREBASE_API_KEY = "YOUR_DATABASE_SECRET_HERE";
    ```
 
-2. **Create `.gitignore`** to exclude sensitive files:
-   ```
-   # Credentials
-   config.h
-   secrets.h
-   *.key
-   *.pem
-   ```
+2. **Use the template file** for sharing:
+   - Share only `main_template.cpp` 
+   - Keep `main.cpp` locally with your credentials
+   - `.gitignore` prevents accidental commits of `main.cpp`
 
-3. **For production**:
-   - Use environment variables
-   - Implement proper authentication
-   - Regenerate credentials if exposed
+3. **Detailed Security Guide**:
+   - See **`CREDENTIALS_SETUP.md`** for complete security instructions
+   - Includes what to do if credentials are exposed
+   - Development vs Production best practices
+
+4. **For production**:
+   - Use environment variables or secure config files
+   - Implement proper Firebase authentication
+   - Regenerate credentials if accidentally exposed
    - Use strong WiFi passwords
-   - Enable Firebase security rules
+   - Enable restrictive Firebase security rules
 
 ## Future Enhancements
 
@@ -393,7 +656,7 @@ Created with Arduino IDE | Powered by ESP8266 & Firebase
 ---
 
 **Last Updated**: December 12, 2025  
-**Version**: 2.0 (Active LOW Detection, Firebase PUT Method, Complete Overhaul)
+**Version**: 2.1 (Added Security Features, Template Files, Credentials Guide)
 
 ## Support & Troubleshooting
 
