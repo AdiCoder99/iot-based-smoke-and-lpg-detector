@@ -1,0 +1,89 @@
+## Arduino IDE / Embedded Systems ##
+build/
+*.o
+*.a
+*.so
+*.exe
+.pio/
+.pioenvs/
+.piolibdeps/
+
+## Credentials & Secrets ##
+# Never commit sensitive information
+config.h
+secrets.h
+credentials.h
+main.cpp.bak
+*.key
+*.pem
+*.p12
+*.pfx
+google-services.json
+firebase-config.json
+
+## Android Development ##
+*.iml
+.gradle/
+/local.properties
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+/build/
+
+## IDE & Editor Files ##
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+## OS Specific ##
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+## Environment Files ##
+.env
+.env.local
+.env.*.local
+.env.prod
+
+## Dependencies ##
+node_modules/
+*.jar
+*.zip
+*.tar.gz
+
+## Firebase ##
+.firebase/
+firebase-debug.log
+app/google-services.json
+
+## Python ##
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+## Misc ##
+*.log
+*.swp
+.history/
+dist/
